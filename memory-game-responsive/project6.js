@@ -75,11 +75,11 @@ document.addEventListener("DOMContentLoaded", () => {
         gameGrid.appendChild(cardElement);
     });
 
-    startTimer(); // Start the timer only when game starts
+    startTimer(); // Start the timer when the game begins
   }
 
   function startTimer() {
-    clearInterval(gameTimer); // Ensure no duplicate timers
+    clearInterval(gameTimer);
     secondsElapsed = 0;
     gameTimer = setInterval(() => {
         secondsElapsed++;
@@ -117,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
         card1.classList.add("match");
         card2.classList.add("match");
 
+        // Maintain the fruit animation on matched cards
         fruit1.style.animation = getComputedStyle(fruit1).animation;
         fruit2.style.animation = getComputedStyle(fruit2).animation;
 
@@ -126,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (matchedPairs === cards.length / 2) {
             clearInterval(gameTimer);
             setTimeout(() => {
-                triggerConfetti(); // 🎊 Trigger confetti animation!
+                triggerConfetti();
                 alert(`🎉 Congratulations! You completed the game in ${moves} moves and ${timer.textContent}.`);
             }, 500);
         }
@@ -147,16 +148,12 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < 100; i++) {
         const confetti = document.createElement("div");
         confetti.classList.add("confetti");
-
-        // Randomize positions
         confetti.style.left = `${Math.random() * 100}vw`;
-        confetti.style.animationDuration = `${Math.random() * 3 + 2}s`; /* Falls slower */
+        confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
         confetti.style.animationDelay = `${Math.random()}s`;
-
         confettiContainer.appendChild(confetti);
     }
 
-    // Remove confetti after it reaches the bottom
     setTimeout(() => {
         confettiContainer.remove();
     }, 5000);
@@ -167,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Create and append the fruit border container
   const fruitBorderContainer = document.createElement("div");
   fruitBorderContainer.classList.add("fruit-border");
   document.body.appendChild(fruitBorderContainer);
@@ -194,16 +192,17 @@ document.addEventListener("DOMContentLoaded", () => {
       fruitBorderContainer.innerHTML = "";
       screenWidth = window.innerWidth;
       screenHeight = window.innerHeight;
+      const borderPadding = fruitSize * 1.5; // 60px
 
-      const borderPadding = fruitSize * 1.5; // Ensure space around game area
-
+      // Top and bottom rows
       for (let x = borderPadding; x < screenWidth - borderPadding; x += fruitSize) {
-          createFruit(x, borderPadding - fruitSize); // Top row
+          createFruit(x, borderPadding - fruitSize); // Top row (y = 20px)
           createFruit(x, screenHeight - borderPadding); // Bottom row
       }
 
+      // Left and right columns
       for (let y = borderPadding; y < screenHeight - borderPadding; y += fruitSize) {
-          createFruit(borderPadding - fruitSize, y); // Left column
+          createFruit(borderPadding - fruitSize, y); // Left column (x = 20px)
           createFruit(screenWidth - borderPadding, y); // Right column
       }
   }
@@ -211,14 +210,5 @@ document.addEventListener("DOMContentLoaded", () => {
   generateFruitBorder();
   window.addEventListener("resize", generateFruitBorder);
 
-  const gameContainer = document.querySelector(".game-container");
-  const gameGrid = document.querySelector(".grid");
-  const startButton = document.getElementById("start-button");
-
-  startButton.addEventListener("click", () => {
-      gameContainer.style.width = "min(80vw, 600px)"; /* Expand Game */
-      gameContainer.style.top = "calc(50% + 20px)"; /* Move Down */
-      gameGrid.style.display = "grid"; /* Show Grid */
-      generateFruitBorder(); /* Adjust Border */
-  });
+  // No longer adjusting the game container via JS—its sizing is controlled by CSS.
 });
